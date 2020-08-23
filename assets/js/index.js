@@ -3,33 +3,95 @@
 //More JS!
 
 //Task 1 && 2
-//MDN
-function customFlat(array) {
-  var newArray = [];
-  (function flat(array) {
-    array.forEach(function (el) {
-      if (Array.isArray(el)) flat(el);
-      else newArray.push(el);
-    });
-  })(array);
-  return newArray;
+
+function ArrayMethods() {
+  this.push = function () {
+    for (let i = 0; i < arguments.length; i++) {
+      this[this.length++] = arguments[i];
+      return this.length;
+    }
+  };
+
+  this.pop = function () {
+    const lastIndex = this.length - 1;
+    const lastItem = this[lastIndex];
+
+    delete this[lastIndex];
+
+    --this.length;
+
+    return lastItem;
+  };
+
+  this.forEach = function (callback) {
+    for (let i = 0; i < this.length; i++) {
+      callback(this[i], i, this);
+    }
+  };
+
+  this.concat = function (array) {
+    let result = new MyArray();
+
+    for (let i = 0; i < this.length; i++) {
+      result.push(this[i]);
+    }
+
+    for (let i = 0; i < array.length; i++) {
+      result.push(array[i]);
+    }
+
+    return result;
+  };
+
+  this.flat = function (depth = 1) {
+    if (depth < 0) {
+      console.error("depth must be a positive value");
+      return;
+    }
+
+    let newArr = new MyArray();
+
+    if (depth === 0) {
+      return this;
+    }
+
+    for (let i = 0; i < this.length; i++) {
+      if (Array.isArray(this[i])) {
+        const buffer = this[i].flat(depth - 1);
+
+        newArr = newArr.concat(buffer);
+      } else if (this[i] !== undefined) {
+        newArr.push(this[i]);
+      }
+    }
+    return newArr;
+  };
 }
 
-//Task 3
-let array = [];
-let s1 = "";
-let s2 = "";
-array[0] = "";
-
-function logParenthis(n) {
-  if (n <= 0) {
-    console.log(array[0]);
-  } else {
-    s1 += "(";
-    s2 += ")";
-    array[0] = s1.concat(s2);
-    logParenthis(n - 1);
+function MyArray() {
+  this.length = 0;
+  for (let i = 0; i < arguments.length; i++) {
+    this[this.length] = arguments[i];
+    this.length++;
   }
+}
+
+MyArray.prototype = new ArrayMethods();
+
+// Task 3
+
+function logParenthesis(level) {
+  let parenthesisArray = [];
+  logPar(level);
+
+  function logPar(number) {
+    if (number > 0) {
+      parenthesisArray = [...parenthesisArray, "("];
+      logPar(number - 1);
+      parenthesisArray = [...parenthesisArray, ")"];
+    }
+  }
+  return parenthesisArray.join("");
 }
 
 //Task 4
@@ -52,21 +114,9 @@ const user = {
 
 //Task 1
 
-function vowelsOnly(str = "Z") {
-  str = str.toLowerCase();
-  let counter = 0;
-  for (let i = 0; i < str.length; i++) {
-    switch (str.charAt(i)) {
-      case "a":
-      case "e":
-      case "i":
-      case "o":
-      case "u":
-        counter++;
-        break;
-    }
-  }
-  return counter;
+function countVowels(string) {
+  const vowels = ["a", "e", "i", "o", "u"];
+  return string.split("").filter((letter) => vowels.includes(letter)).length;
 }
 
 //Task 2
@@ -87,32 +137,27 @@ function fizzBuzz(n) {
 
 //Task 3
 
-function avg() {
-  let sum = 0;
-  for (let i = 0; i < arguments.length; i++) {
-    sum += arguments[i];
-  }
-  return sum / arguments.length;
+function avg(...args) {
+  return args.reduce((sum, value) => sum + value) / args.length;
 }
 
 //Task 4
 
-function addNum(n) {
-  return function addition(m) {
-    return n + m;
+function addNum(initialValue) {
+  let accumulator = initialValue;
+  return function addition(number) {
+    return (accumulator += number);
   };
 }
-const test = addNum(5);
 
 // Task 5
 
 function operation(num1, num2, fn) {
-  fn(num1, num2);
+  return fn(num1, num2);
 }
 
 function division(value1, value2) {
-  console.log("another function");
-  console.log(value1 / value2);
+  return value1 / value2;
 }
 
 //Task 6
