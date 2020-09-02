@@ -5,11 +5,11 @@
 //Task 1 && 2
 
 function ArrayMethods() {
-  this.push = function () {
-    for (let i = 0; i < arguments.length; i++) {
-      this[this.length++] = arguments[i];
-      return this.length;
+  this.push = function (...args) {
+    for (let i = 0; i < args.length; i++) {
+      this[this.length++] = args[i];
     }
+    return this.length;
   };
 
   this.pop = function () {
